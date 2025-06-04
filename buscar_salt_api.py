@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from eth_utils import keccak, to_checksum_address
 import time
+import os
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -11,7 +12,7 @@ def options_salt():
     return '', 200
 
 def get_create2_address(factory, salt, bytecode_hash):
-    parts = [b'\\xff', bytes.fromhex(factory[2:]), bytes.fromhex(salt[2:]), bytes.fromhex(bytecode_hash[2:])]
+    parts = [b'\xff', bytes.fromhex(factory[2:]), bytes.fromhex(salt[2:]), bytes.fromhex(bytecode_hash[2:])]
     addr = keccak(b''.join(parts))[-20:]
     return to_checksum_address('0x' + addr.hex())
 
@@ -43,5 +44,7 @@ def buscar_salt():
 
     return jsonify({"erro": "Nenhum salt encontrado após {} tentativas.".format(max_attempts)}), 404
 
+# Importante para o Render: usar a porta fornecida pelo sistema
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5005)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
