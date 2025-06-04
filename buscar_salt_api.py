@@ -1,9 +1,11 @@
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from eth_utils import keccak, to_checksum_address
 import time
 
 app = Flask(__name__)
+CORS(app)
 
 def get_create2_address(factory, salt, bytecode_hash):
     parts = [b'\xff', bytes.fromhex(factory[2:]), bytes.fromhex(salt[2:]), bytes.fromhex(bytecode_hash[2:])]
@@ -39,4 +41,4 @@ def buscar_salt():
     return jsonify({"erro": "Nenhum salt encontrado após {} tentativas.".format(max_attempts)}), 404
 
 if __name__ == '__main__':
-    app.run(port=5005)
+    app.run(host='0.0.0.0', port=5005)
