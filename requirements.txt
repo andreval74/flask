@@ -2,3 +2,4 @@ flask
 flask-cors
 py-solc-x
 eth-hash[pycryptodome]
+eth-utils
