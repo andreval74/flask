@@ -7,6 +7,15 @@ import os
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
+# Força headers CORS manualmente
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    return response
+
+# Suporte ao preflight
 @app.route('/buscar-salt', methods=['OPTIONS'])
 def options_salt():
     return '', 200
@@ -44,7 +53,6 @@ def buscar_salt():
 
     return jsonify({"erro": "Nenhum salt encontrado após {} tentativas.".format(max_attempts)}), 404
 
-# Importante para o Render: usar a porta fornecida pelo sistema
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
