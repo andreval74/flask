@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware CORS liberando apenas seu domínio
 app.use(cors({
   origin: 'https://webkeeper.com.br',
-  methods: ['POST'],
+  methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 }));
 
